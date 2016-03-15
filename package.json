@@ -4,8 +4,9 @@
   "description": "tutorial and discussion about using oop features and designs in js",
   "main": "index.js",
   "scripts": {
-    "test": "mocha tutorials",
-    "docs": "cat docs/header.html > docs/index.html && mocha tutorials --reporter doc >> docs/index.html && cat docs/footer.html >> docs/index.html"
+    "test": "mocha tutorials/index",
+    "docs": "cat docs/header.html > docs/index.html && mocha tutorials/index --reporter doc >> docs/index.html && cat docs/footer.html >> docs/index.html",
+    "md" : "mocha tutorials/index.js --reporter ../../../lib/mocha-reporter-md.js > tmp.md && marked -f tmp.md -o tmp.html"
   },
   "repository": {
     "type": "git",

@@ -16,10 +16,13 @@ $(function(){
     $(this).html(highlight($(this).text()));
   });
 
-  $('#menu').text( 
-    $('#content .suite h1').each(function(ix, e) { 
-    })
-  )
+  var id = 0;
+  var bullets = [];
+  $('#content .suite h1').each(function(ix, h1) {
+      bullets.push("<li><a href='#" + (h1.id = "header-" + id++) + "'>" + h1.innerHTML + "</a></li>" );
+  });
+
+  $('#menu').html( bullets.join("") );
 });
 
 function highlight(js) {
