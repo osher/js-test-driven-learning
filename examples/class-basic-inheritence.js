@@ -22,6 +22,7 @@ var Employee =
         //  does not have to be first line in constructor
         //  can be done anywhere (even outside the constructor...)
         Person.call(this, name, age);
+        //Person.apply(this, arguments) //[name, age]
         //the dynamic form of this line would be:
         //this.constructor.prototype.constructor.call(this, name, age);
         // - however - should require more cautious referencing..
@@ -93,7 +94,7 @@ function employee_greet(person) {
             func Employee(..){..} func Person(..){..}
     */
 
-    return u.format( "%s I work at %s", greet, this.company);
+    return u.format( "%s I work at %s", greet, this.company.name);
 }
 
 function employee_produce(qty) {
@@ -105,35 +106,35 @@ function employee_produce(qty) {
     return product;
 }
 
-function employee_register(emp, company) {
-    //NOTE: this impl. is a little of an antipattern: 
+function employee_register(emp, companyName) {
+    //NOTE: this impl. is a little of an mentipattern: 
     //  puristically, we would expect to have a Company constructor
     //  but then again - it's a design decision when it justifies 
     //  its own class
     var company = 
-        Employee.company[ company ]
-        || ( Employee.company[ company ] = 
-             { name    : company
+        Employee.company[ companyName ]
+        || ( Employee.company[ companyName ] = 
+             { name    : companyName
              , workers : []
              , products: []
              }
            )
         ;
-    company.push(emp);
+    company.workers.push(emp);
     return company;
 }
 //---------------------------------------------------------------
 
 var Lineworker = 
   module.exports.Lineworker = 
-    function Lumberjack(name, age, comp, job) {
+    function Lineworker(name, age, comp, job) {
         Employee.call(this, name, age, comp, job)
     };
 
 u.inherits(Lineworker, Employee);
 
 u._extend(Lineworker.prototype
-, { produce : prod
+, { fieldWork : lineworker_fieldWork
   }
 );
 

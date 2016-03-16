@@ -32,10 +32,10 @@ u._extend(Person
 //  ES5 - they can be protected by setting the field attributes explicitly
 Object.defineProperties( Person.prototype
 , { type : 
-    { enumerable  : true
-    , configurable: false
+    { value       : "person"
+    , enumerable  : true
     , writable    : false
-    , value       : "person"
+    , configurable: false
     }
   }
 }
@@ -46,7 +46,9 @@ function person_hi() {
 }
 
 function person_greet(person) {
-    this.constructor.greets++;
+    Person.greets++
+    //the dynamioc way to do that:
+    //this.constructor.greets++;
     return u.format("hello %s, I'm %s.", person.name, this.name);
 }
 
