@@ -1,5 +1,5 @@
 module.exports = 
-{ "ways to obtain a function Object" :
+{ "creating functions" :
   { "function declaration" : 
     { "must have a name (cannot be anonymous)" : 
       function() {
@@ -94,10 +94,73 @@ module.exports =
       }
     }
   , "function constructor" : 
-    { "TBD" : null
+    { "The core Function is a function object" : 
+      function() {
+          Should(typeof Function).eql("function");
+          Function.should.be.a.Function;
+          Function.should.be.instanceOf(Object);          
+          Function.should.be.instanceOf(Function);
+      }
+    , "when used with the new operator - it returns a new Function object" : 
+      function() {
+          var f = new Function();
+          Should(typeof Function).eql("function");
+          f.should.be.a.Function;
+          f.should.be.instanceOf(Object);          
+          f.should.be.instanceOf(Function);
+      }
+    , "last argument it accepts will be the body" : 
+      function() {
+          var f = new Function("return 'body'");
+          
+          f.toString().should.eql(
+            [ "function anonymous() {"
+            , "return 'body'"
+            , "}"
+            ].join("\n")
+          )
+      }
+    , "all arguments except the last are joined to the named arguments" : 
+      function() { 
+          var f1 = new Function("a,b,c", "return a + b + c");
+          var f2 = new Function("a", "b", "c", "return a + b + c");
+          var f3 = new Function("a,b", "c", "return a + b + c");
+          
+          //TRICKY: I don't know why there's this `\n/**/` there...
+          //  observed in node v0.12
+          var expected = 
+              [ "function anonymous(a,b,c\n/**/) {"
+              , "return a + b + c"
+              , "}"
+              ].join("\n")
+          ;
+          f1.toString().should.eql(expected);
+          f2.toString().should.eql(expected);
+          f3.toString().should.eql(expected)
+      }
+    , "comments are honored in both arguments and body" : 
+      function() {
+          var fc = new Function("a/** param a */","b/** param b*/", "/* add them */ return a + b");
+          //TRICKY: I don't know why there's this `\n/**/` there...
+          //  observed in node v0.12
+          
+          fc.toString().should.eql(
+            [ "function anonymous(a/** param a */,b/** param b*/\n/**/) {"
+            , "/* add them */ return a + b"
+            , "}"
+            ].join("\n")
+          );
+      }
+    , "they are always named anonymous, and their name property is an empty string" :
+      function() {
+          var f1 = new Function("a,b,c", "return a + b + c");
+          
+          f1.toString().should.match(/^function anonymous\(/);
+          f1.name.should.equal("");
+      }
     }
   }
-, "all functions (regardless to how they were obtained)" : 
+, "function objects" : 
   { "support a string attribute .name exposing their decalred name (if any)" :
     function() {
         function namedFunc() {}
@@ -251,6 +314,31 @@ module.exports =
 
           function inner() { 
               var a = 1;
+          }
+      }
+    , "function object created by the Function constructor are up chained to the global object directly" : 
+      function() {
+          var func = myFactory();
+          
+          //both first ways enjoy benefits of closure scope chain
+          func.declared()  .should.eql("string");
+          func.expression().should.eql("string");
+          
+          //However...
+          func.byCtor()    .should.eql("undefined");
+        
+          function myFactory() { 
+              var a = "aaa";
+              
+              return { 
+                  declared   : declared
+                  expression : function expr() { return typeof a },
+                  byCtor: new Function("return tyoeof a");
+              }
+              
+              function declared() { 
+                  return typeof a
+              }
           }
       }
     }
