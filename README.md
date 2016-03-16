@@ -1,7 +1,7 @@
 # js-test-driven-learning
 
 ## Overview
-This project is deeply inspired by the book [Test Driven JavaScript Development]http://www.goodreads.com/book/show/9269233-test-driven-javascript-development).
+This project is deeply inspired by the book [Test Driven JavaScript Development](http://www.goodreads.com/book/show/9269233-test-driven-javascript-development).
 Although the book is quite old, and big parts of the book gets obsolete, the 
 book directs to a very specific type of learning, that once obtained by the
 reader - will never get obsolete: test-driven-learning.
